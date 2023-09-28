@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feed De Notícias.</title>
+    <title>News Feed.</title>
     <link rel="stylesheet" href="feed.css">
 
     <style>
@@ -25,24 +25,24 @@
     <div style="display:none" id="addForm">
 
         <div class="divsave">
-            <label>-Digite a Manchete da sua notícia.</label>
+            <label>Type the Title:</label>
             <div><input type="text" id="addManchete" style="font-weight: 600;"></div>
         </div>
 
         <div class="divsave">
-            <label>-Digite a sua notícia completa.</label>
+            <label>Type your Post:</label>
             <div><textarea type="text" id="addCorpo"></textarea></div>
         </div>
         <div class="divBtns2">
-            <button onclick="salvarNoticia()" id="saveBtn" class="buttonsave2">Salvar</button>
-            <button onclick="cancelar()" class="buttonvoltar">Cancelar</button>
+            <button onclick="salvarNoticia()" id="saveBtn" class="buttonsave2">Save</button>
+            <button onclick="cancelar()" class="buttonvoltar">Cancel</button>
         </div>
     </div>
 
     <div id="divBtns">
-        <button onclick="addNoticias()" id="addBtn" class="button">Adicionar nova Notícia.</button>
-        <button id="btnSortA" class="btnSort" onclick="sortA()"> Ordenar Alfabeticamente </button>
-        <button id="btnSortData" class="btnSort" onclick="sortData()"> Ordenar por Data </button>
+        <button onclick="addNoticias()" id="addBtn" class="button">Add New Post</button>
+        <button id="btnSortA" class="btnSort" onclick="sortA()"> Sort it Alphabetically </button>
+        <button id="btnSortData" class="btnSort" onclick="sortData()"> Sort by Date </button>
     </div>
 
 

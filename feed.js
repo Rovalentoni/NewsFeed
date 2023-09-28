@@ -1,157 +1,98 @@
+const news = [
+    { headline: "<b>Russia and Ukraine in conflict</b>", body: "Detailed news content here...<br><br>", date: new Date() }
+];
 
-var noticias = [
-    { Manchete: "Rússia e Ucrânia entram em conflito</b>", Corpo: "Aqui temos uma notícia detalhada, com mais espaço para exibição e etc etc...<br><br>", Data: new Date() },
-    { Manchete: "Aússia e Ucrânia entram em conflito</b>", Corpo: "Aqui temos uma notícia detalhada, com mais espaço para exibição e etc etc...<br><br>", Data: new Date() },
-    { Manchete: "Bússia e Ucrânia entram em conflito</b>", Corpo: "Aqui temos uma notícia detalhada, com mais espaço para exibição e etc etc...<br><br>", Data: new Date() }
-]
-
-//showFeed() = função responsável por esconder todas as notícias e então mostrar somente a desejada via onclick.
-
-function showFeed(prefix) {
-    for (i = 0; i < noticias.length; i++) {
-        document.getElementById("corpo" + i).style.display = "none";
-        document.getElementById("corpo" + prefix).style.display = "inline";
+// Display selected news item
+function showFeed(index) {
+    for (let i = 0; i < news.length; i++) {
+        document.getElementById(`body${i}`).style.display = "none";
     }
-
+    document.getElementById(`body${index}`).style.display = "inline";
 }
 
-//hideFeed() = função responsável por esconder a notícia via onclick
-
-function hideFeed(prefix) {
-    document.getElementById("corpo" + prefix).style.display = "none";
+// Hide displayed news item
+function hideFeed(index) {
+    document.getElementById(`body${index}`).style.display = "none";
 }
 
-//tabelar() = Função responsável por mostrar todos os elementos da array notícias na tela.
-
-function tabelar() {
-    var string = "";
-    for (i = 0; i < noticias.length; i++) {
-        string += '<li id="n' + i + '" onclick="showFeed(' + i + ')" class = "manchete">' +
-            noticias[i].Manchete + '</li><div style="display:none" onclick="hideFeed(' + i + ')" id="corpo' + i + '">' + noticias[i].Corpo + noticias[i].Data +
-            '</div><div style="display:none" id="idEscondido">' + i + '</div> '
+// Populate the news list on the page
+function populateNews() {
+    let newsList = "";
+    for (let i = 0; i < news.length; i++) {
+        newsList += `<li id="n${i}" onclick="showFeed(${i})" class="headline">${news[i].headline}</li>
+                     <div style="display:none" onclick="hideFeed(${i})" id="body${i}">${news[i].body}${news[i].date}</div>`;
     }
-    return string;
+    return newsList;
 }
 
-document.getElementById("listaPrincipal").innerHTML = "<ol>" + tabelar() + "</ol>";
+document.getElementById("mainList").innerHTML = `<ol>${populateNews()}</ol>`;
 
-
-//addNoticias() = função responsável por mostrar o formulário de "adicionar noticias" (addForm) e esconder os botões da página no meio tempo.
-
-function addNoticias() {
+// Show add news form
+function showAddNewsForm() {
     document.getElementById("addForm").style.display = "inline";
     document.getElementById("addBtn").style.display = "none";
-    document.getElementById("divBtns").style.display = "none";
-
-
+    document.getElementById("btnContainer").style.display = "none";
 }
 
-//lerCampos() = Função responsável por ler os inputs do cliente em cada campo e transforma-los num objeto, para depois serem adicionados à array principal.
-
-function lerCampos() {
-    let lerCampo = {};
-    lerCampo.Manchete = "<b>" + document.getElementById("addManchete").value + "</b>";
-    lerCampo.Corpo = document.getElementById("addCorpo").value + "<br><br>";
-    lerCampo.Data = new Date();
-    return lerCampo;
-
+// Read user inputs and return as an object
+function readFields() {
+    return {
+        headline: `<b>${document.getElementById("addHeadline").value}</b>`,
+        body: `${document.getElementById("addBody").value}<br><br>`,
+        date: new Date()
+    };
 }
 
-//validaCampos() = Função responsável por validar os campos digitados pelo cliente e avisa-lo o que está faltando.
-
-function validaCampos() {
-    /*console.log("Chamou a função validaCampos"), coloquei esse console.log e, se algo aparecer no console,
-     sei que a execução chegou até aqui, se não, o problema é antes de chegar aqui.*/
+// Validate user inputs
+function validateFields() {
     let msg = "";
-    if (lerCampos().Manchete == "<b></b>") {
-        msg += "-Digite a Manchete da sua notícia \n";
-        document.getElementById("addManchete").style.border = "1px solid red";
+    const fields = readFields();
+    if (fields.headline === "<b></b>") {
+        msg += "Please enter a headline.\n";
+        document.getElementById("addHeadline").style.border = "1px solid red";
     }
-    if (lerCampos().Corpo == "<br><br>") {
-        msg += "-Digite o Corpo da sua notícia \n";
-        document.getElementById("addCorpo").style.border = "1px solid red";
+    if (fields.body === "<br><br>") {
+        msg += "Please enter the body of the news.\n";
+        document.getElementById("addBody").style.border = "1px solid red";
     }
-    if (msg != "") {
+    if (msg) {
         alert(msg);
-        return false
+        return false;
     }
-    else
-        alert("Sua notícia foi postada com sucesso!");
-
-    return true
-
+    alert("News posted successfully.");
+    return true;
 }
 
-//salvarNoticia() = função responsável por salvar o objeto criado pela lerCampos() caso a validação seja um sucesso.
-
-function salvarNoticia() {
-    /*console.log("validaCampos",validaCampos());
-    console.log("lerCampos",lerCampos());*/
-    if (validaCampos() === true) {
-        noticias.push(lerCampos());
-        document.getElementById("listaPrincipal").innerHTML = "<ol>" + tabelar() + "</ol>";
+// Save the news if validation succeeds
+function saveNews() {
+    if (validateFields()) {
+        news.push(readFields());
+        document.getElementById("mainList").innerHTML = `<ol>${populateNews()}</ol>`;
         document.getElementById("addForm").style.display = "none";
-        document.getElementById("addManchete").value = null;
-        document.getElementById("addCorpo").value = null;
-        document.getElementById("divBtns").style.display = "inline-block"
-        document.getElementById("addBtn").style.display = "inline-block"
+        document.getElementById("addHeadline").value = "";
+        document.getElementById("addBody").value = "";
+        document.getElementById("btnContainer").style.display = "inline-block";
+        document.getElementById("addBtn").style.display = "inline-block";
     }
 }
 
-/* Consolelog no nome da função (sem ()) = descrição da função e quando a função em si é chamada () ele me imprime o retorno da função
-testar todos os valores que a função tem dentro dela, para debuga-la
-consolelog ainda mostra, no console, a ordem que cada função está sendo executada*/
-
-/*function compare(a, b) {
-    if (a.Manchete < b.Manchete) {
-        return -1;
-    }
-    if (a.Manchete > b.Manchete) {
-        return 1;
-    }
-    return 0;
-}
-*/
-
-//cancelar() = Função responsável pelo botão de cancelamento criado após clicarmos em "Adicionar notícia". Serve para voltar para o estado inicial da página.
-
-function cancelar() {
+// Cancel button logic
+function cancel() {
     document.getElementById("addForm").style.display = "none";
     document.getElementById("addBtn").style.display = "inline-block";
-    document.getElementById("addManchete").value = null;
-    document.getElementById("addCorpo").value = null;
-    document.getElementById("divBtns").style.display = "inline-block";
-    document.getElementById("addManchete").style.border = "2px solid black";
-    document.getElementById("addCorpo").style.border = "1px solid black";
-
+    document.getElementById("addHeadline").value = "";
+    document.getElementById("addBody").value = "";
+    document.getElementById("btnContainer").style.display = "inline-block";
 }
 
-//sortData() = Função responsável por organizar as notícias pelo objeto new Date() da array noticias.
-
-function sortData() {
-    noticias.sort(function compare(a, b) {
-
-        if (a.Data > b.Data) {
-            return 1
-        }
-        if (a.Data < b.Data) {
-            return -1
-        }
-        if (a.Data = b.Data) {
-            return 0
-        }
-    })
-    document.getElementById("listaPrincipal").innerHTML = "<ol>" + tabelar() + "</ol>";
-
+// Sort news by date
+function sortByDate() {
+    news.sort((a, b) => a.date - b.date);
+    document.getElementById("mainList").innerHTML = `<ol>${populateNews()}</ol>`;
 }
 
-
-//sortA() = Função responsável por sortear as notícias alfabeticamente. 
-
-function sortA() {
-    noticias.sort(function (a, b) {
-        return a.Manchete.localeCompare(b.Manchete)
-    })
-    document.getElementById("listaPrincipal").innerHTML = "<ol>" + tabelar() + "</ol>";
+// Sort news alphabetically
+function sortAlphabetically() {
+    news.sort((a, b) => a.headline.localeCompare(b.headline));
+    document.getElementById("mainList").innerHTML = `<ol>${populateNews()}</ol>`;
 }
-
